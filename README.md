@@ -1,6 +1,4 @@
-**Here is a complete, professional, and well-structured `README.md` file** tailored specifically for your Vision Transformer project.  
 
-You can copy the entire content below and paste it directly into your GitHub repository as `README.md`. It is ready to use and includes all technical details from your notebook.
 
 ```markdown
 # Vision Transformer (ViT) from Scratch – CIFAR-10
@@ -11,7 +9,7 @@ You can copy the entire content below and paste it directly into your GitHub rep
 
 A clean, from-scratch implementation of the **Vision Transformer (ViT)** architecture in pure PyTorch, trained on the CIFAR-10 dataset. This project closely follows the original ViT paper and was developed as a learning exercise.
 
-## ✨ Features
+# ✨ Features
 
 - Complete **Vision Transformer** architecture implemented from scratch
 - Custom `PatchEmbedding` with learnable **[CLS] token** and positional embeddings
@@ -22,7 +20,7 @@ A clean, from-scratch implementation of the **Vision Transformer (ViT)** archite
 - GPU-accelerated training with proper device handling
 - Modular and well-documented code with separate classes for each component
 
-## 🏗️ Model Architecture
+# 🏗️ Model Architecture
 
 | Component                  | Details                                      |
 |---------------------------|----------------------------------------------|
@@ -96,12 +94,3 @@ Feel free to star ⭐ the repository if you found it helpful!
 
 ### How to use this README
 1. Replace `https://github.com/yourusername/vit-from-scratch.git` with your actual repository URL.
-2. (Optional) Add a `LICENSE` file and your training plots as images in the repo for even better visuals.
-3. Commit and push — your repository will look professional and technical instantly.
-
-Would you like me to also generate:
-- A `requirements.txt` file?
-- A `LICENSE` (MIT)?
-- An enhanced version with attention map visualization code?
-
-Just let me know and I will provide it immediately.
