@@ -1,96 +1,257 @@
+# 📷 Vision Transformer (ViT) From Scratch
 
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-DeepLearning-red)
+![Transformers](https://img.shields.io/badge/Transformer-Vision-important)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-```markdown
-# Vision Transformer (ViT) from Scratch – CIFAR-10
+A **minimal implementation of a Vision Transformer (ViT)** using **PyTorch**, designed for learning and experimentation.
 
-[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+This project demonstrates how transformers — originally created for NLP — can be applied to **image classification tasks**.
 
-A clean, from-scratch implementation of the **Vision Transformer (ViT)** architecture in pure PyTorch, trained on the CIFAR-10 dataset. This project closely follows the original ViT paper and was developed as a learning exercise.
-
-# ✨ Features
-
-- Complete **Vision Transformer** architecture implemented from scratch
-- Custom `PatchEmbedding` with learnable **[CLS] token** and positional embeddings
-- 6-layer Transformer encoder with **Pre-LayerNorm**
-- Multi-Head Self-Attention (8 heads, `embed_dim=256`)
-- GELU-activated MLP blocks with dropout
-- Strong data augmentation pipeline (RandomCrop, HorizontalFlip, ColorJitter)
-- GPU-accelerated training with proper device handling
-- Modular and well-documented code with separate classes for each component
-
-# 🏗️ Model Architecture
-
-| Component                  | Details                                      |
-|---------------------------|----------------------------------------------|
-| Image Size                | 32 × 32 × 3 (CIFAR-10)                       |
-| Patch Size                | 4 × 4                                        |
-| Number of Patches         | 64                                           |
-| Embedding Dimension       | 256                                          |
-| Number of Heads           | 8                                            |
-| Transformer Depth         | 6                                            |
-| MLP Dimension             | 512                                          |
-| Dropout Rate              | 0.1                                          |
-| Classification Head       | Linear (CLS token → 10 classes)              |
-
-## 📊 Training Setup
-
-- **Dataset**: CIFAR-10 (50,000 train / 10,000 test)
-- **Batch Size**: 128
-- **Epochs**: 10
-- **Optimizer**: Adam (`lr=3e-4`)
-- **Loss**: CrossEntropyLoss
-- **Hardware**: NVIDIA Tesla T4 (CUDA)
-- **Augmentations**: RandomCrop(padding=4), RandomHorizontalFlip, ColorJitter
-
-## 🚀 Quick Start
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/yourusername/vit-from-scratch.git
-cd vit-from-scratch
-```
-
-### 2. Install dependencies
-```bash
-pip install torch torchvision torchaudio matplotlib numpy
-```
-
-### 3. Run the notebook
-Open `ViT.ipynb` in Google Colab or Jupyter Notebook and run all cells.
-
-## 📁 Project Structure
-```
-ViT-from-scratch/
-├── ViT.ipynb                 # Complete implementation + training
-├── README.md
-└── LICENSE
-```
-
-## 📈 Results
-The model was successfully trained for **10 epochs**. Training curves (loss & accuracy) are visible in the notebook. The architecture demonstrates stable convergence and validates the effectiveness of Transformer-based vision models even on small-resolution datasets like CIFAR-10.
-
-Further improvements planned:
-- Training on larger datasets (CIFAR-100, ImageNet-1k subset)
-- Learning rate scheduling & weight decay
-- Comparison with ResNet baselines
-- Visualization of attention maps
-
-## 📚 References
-- Original Paper: [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/abs/2010.11929)
-- Tutorial followed: [freeCodeCamp Vision Transformer Course](https://youtu.be/7o1jpvapaT0)
-
-## 🙏 Acknowledgments
-- Special thanks to **freeCodeCamp.org** for the excellent tutorial that guided this implementation.
-- Built as part of my deep learning learning journey.
+Inspired by the research paper  
+**An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale**
 
 ---
 
-**Made with ❤️ using PyTorch**
+# 🧠 What is a Vision Transformer?
 
-Feel free to star ⭐ the repository if you found it helpful!
+A **Vision Transformer (ViT)** replaces convolutional neural networks with a **transformer architecture**.
+
+Instead of processing pixels with convolution filters:
+
+1️⃣ The image is split into **patches**  
+2️⃣ Patches are **flattened and embedded**  
+3️⃣ A **Transformer Encoder** processes them  
+4️⃣ The **[CLS] token** predicts the image class
+
+---
+
+# 🏗 Architecture Overview
+
+```
+Input Image
+     │
+     ▼
+Split Into Patches
+     │
+     ▼
+Patch Embedding Layer
+     │
+     ▼
+Add Positional Encoding
+     │
+     ▼
+Transformer Encoder Blocks
+     │
+     ▼
+Classification Head
+     │
+     ▼
+Prediction
 ```
 
-### How to use this README
-1. Replace `https://github.com/yourusername/vit-from-scratch.git` with your actual repository URL.
+---
+
+# 📂 Project Structure
+
+```
+Vision-Transformer/
+│
+├── ViT.ipynb           # Main notebook implementation
+├── README.md
+└── images/
+    └── vit_architecture.png
+```
+
+---
+
+# ⚡ Quick Start
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/solo938/Vision-Transformer.git
+
+cd Vision-Transformer
+```
+
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
+pip install torch torchvision matplotlib numpy
+```
+
+---
+
+## 3️⃣ Run the Notebook
+
+```bash
+jupyter notebook ViT.ipynb
+```
+
+or open with **Google Colab**
+
+---
+
+# 🧩 Core Components Implemented
+
+## Patch Embedding
+
+```python
+class PatchEmbedding(nn.Module):
+    def __init__(self, img_size, patch_size, emb_dim):
+        super().__init__()
+
+        self.n_patches = (img_size // patch_size) ** 2
+
+        self.proj = nn.Conv2d(
+            in_channels=3,
+            out_channels=emb_dim,
+            kernel_size=patch_size,
+            stride=patch_size
+        )
+
+    def forward(self, x):
+        x = self.proj(x)
+        x = x.flatten(2)
+        x = x.transpose(1, 2)
+        return x
+```
+
+---
+
+## Multi-Head Self Attention
+
+```python
+class MultiHeadAttention(nn.Module):
+
+    def __init__(self, emb_dim, num_heads):
+        super().__init__()
+
+        self.num_heads = num_heads
+        self.scale = emb_dim ** -0.5
+
+        self.qkv = nn.Linear(emb_dim, emb_dim * 3)
+        self.proj = nn.Linear(emb_dim, emb_dim)
+
+    def forward(self, x):
+
+        B, N, C = x.shape
+        qkv = self.qkv(x)
+
+        qkv = qkv.reshape(B, N, 3, self.num_heads, C // self.num_heads)
+        qkv = qkv.permute(2,0,3,1,4)
+
+        q,k,v = qkv[0], qkv[1], qkv[2]
+
+        attn = (q @ k.transpose(-2,-1)) * self.scale
+        attn = attn.softmax(dim=-1)
+
+        out = (attn @ v)
+        out = out.transpose(1,2).reshape(B,N,C)
+
+        return self.proj(out)
+```
+
+---
+
+# 📊 Vision Transformer Pipeline
+
+```
+Image (224x224)
+      │
+      ▼
+Patchify (16x16 patches)
+      │
+      ▼
+196 tokens
+      │
+      ▼
+Linear Embedding
+      │
+      ▼
+Add Positional Encoding
+      │
+      ▼
+Transformer Encoder × L
+      │
+      ▼
+MLP Head
+      │
+      ▼
+Class Prediction
+```
+
+---
+
+# 📈 Possible Improvements
+
+- Train on **CIFAR-10**
+- Add **Data Augmentation**
+- Add **Attention Visualization**
+- Convert notebook → **Modular PyTorch project**
+- Add **training scripts**
+
+---
+
+# 🧪 Example Datasets
+
+You can test this implementation on:
+
+- CIFAR-10  
+- ImageNet  
+- MNIST  
+
+---
+
+# 📚 Learning Resources
+
+If you want to deeply understand Vision Transformers:
+
+- **Attention Is All You Need**
+- **An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale**
+
+Libraries to explore:
+
+- PyTorch  
+- Hugging Face Transformers  
+- timm (PyTorch Image Models)
+
+---
+
+# 🛣 Roadmap
+
+- [ ] Implement training loop  
+- [ ] Add dataset loader  
+- [ ] Implement ViT-B/16  
+- [ ] Add visualization of attention maps  
+- [ ] Convert notebook → production code
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository  
+2. Create a new branch  
+3. Submit a pull request
+
+---
+
+# ⭐ Support
+
+If you found this useful:
+
+⭐ Star the repository  
+🍴 Fork it  
+🧠 Experiment with your own transformer ideas
+
+---
+
+# 📜 License
+
+MIT License
